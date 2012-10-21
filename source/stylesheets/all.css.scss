@@ -1,0 +1,221 @@
+@charset "utf-8";
+
+@import 'compass', 'compass/reset';
+
+@mixin set-on-circle($num-blocks: 5, $angle-span: 180deg, $angle-offset: 0deg) {
+  $angle-per-block: $angle-span / $num-blocks;
+
+  @for $i from 1 through $num-blocks {
+    > *:nth-child(#{$i}) { @include transform(rotate($angle-offset + $angle-per-block * $i)); }
+  }
+}
+
+$clock-height: 200px;
+
+* {
+  margin: 0;
+  padding: 0;
+  @include box-sizing(border-box);
+}
+
+html, body {
+  height: 100%;
+}
+
+$background-color: hsl(50, 10%, 90%);
+
+body {
+  position: relative;
+  background: -webkit-linear-gradient(top left, hsl(200,20%,5%), hsl(200,20%,25%));
+}
+
+.clock {
+  @include set-on-circle($num-blocks: 12, $angle-span: 360deg);
+  position: absolute;
+  top: 40%; left: 50%;
+  margin: -#{$clock-height / 2};
+  width: $clock-height;
+  height: $clock-height;
+  @include border-radius(50%);
+  background: -webkit-linear-gradient(hsl(36, 100%, 94%),navajowhite);
+  border: 2px solid goldenrod;
+  @include box-sizing(content-box);
+  padding: 2px;
+  @include box-shadow(inset 0 1px 2px rgba(0, 0, 0, 0.5), 0 2px 5px rgba(0,0,0,.2));
+
+  .number {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    width: $clock-height / 12;
+    height: $clock-height / 2;
+    margin: 2px -8px;
+    text-align: center;
+    font: bold 24px/1 'Helvetica Neue', sans-serif;
+    -webkit-transform-origin: bottom center;
+    -webkit-font-smoothing: antialiased;
+    color: goldenrod;
+    text-shadow: 0 1px lightyellow;
+  }
+
+  &:before {
+    content: '\2022';
+    width: 20px;
+    height: 20px;
+    font: bold 20px/1 'sans-serif';
+    position: absolute;
+    text-align: center;
+    top: 50%;
+    left: 50%;
+    margin: -10px;
+    color: hsl(43, 74%, 39%);
+  }
+
+  &:after {
+    content: '';
+    top: 0;
+    right: 0;
+    left: 0;
+    bottom: 0;
+    background: -webkit-linear-gradient(top right, rgba(255,255,255,.4), rgba(255,255,255,.2) 50%, rgba(255,255,255,0) 50%);
+    position: absolute;
+    border-radius: 50%;
+  }
+}
+
+.buttons {
+  position: absolute;
+  left: 50%;
+  width: 180px;
+  height: 30px;
+  bottom: 10%;
+  margin: -15px -90px;
+  text-align: center;
+  border-radius: 10px;
+  background: -webkit-linear-gradient(whitesmoke, lightgrey 55%);
+  border: 1px solid lightgrey;
+  font: 400 15px/28px 'Droid Sans';
+  -webkit-font-smoothing: antialiased;
+  box-shadow: inset 0 1px snow, inset 0 -1px #cccccc;
+  letter-spacing: -1px;
+
+  a {
+    display: block;
+    float: left;
+    width: 50%;
+    text-decoration: none;
+    color: darkslategrey;
+    text-shadow: 0 1px whitesmoke;
+
+    &:first-child { @include border-left-radius(8px); }
+    &:last-child {
+      @include border-right-radius(8px);
+      &.active { margin: -1px -1px -1px 1px; }
+    }
+
+    &.active {
+      background: -webkit-linear-gradient(darkslategrey, slategrey);
+      height: 30px;
+      margin: -1px;
+      border: 1px solid darkslategray;
+      box-shadow: inset 0 1px #444;
+      color: lightslategray;
+      text-shadow: 0 1px darkslategray;
+    }
+  }
+}
+
+
+.hand {
+  position: absolute;
+  background: black;
+  height: 50%;
+  left: 50%;
+  background: hsl(43, 74%, 39%);
+  -webkit-transform-origin: bottom center;
+}
+
+.hour-hand, .minute-hand {
+  width: 4px;
+  margin-left: -2px;
+
+  &:before {
+    content: '';
+    border: 2px solid transparent;
+    position: absolute;
+    top: -4px;
+    border-bottom-color: hsl(43, 74%, 39%);
+  }
+}
+
+.hour-hand {
+  height: 30%;
+  top: 20%;
+}
+
+.minute-hand {
+  height: 40%;
+  top: 10%;
+}
+
+.second-hand {
+  margin-left: -.5px;
+  width: 1px;
+  top: 5%;
+  height: 45%;
+}
+
+
+
+.digital.clock {
+  border-radius: 20px;
+  width: 300px;
+  height: 100px;
+  margin: -50px -150px;
+  background: -webkit-linear-gradient(slategrey,darkslategrey);
+  border-color: lightgray;
+  box-shadow: inset 0 1px 1px rgba(0,0,0,.75);
+
+  .number, &:before { display: none; }
+
+  &:after {
+    border-radius: 18px;
+    background: -webkit-linear-gradient(top right, rgba(255,255,255,.1),rgba(255,255,255,.05) 50%,rgba(255,255,255,0) 50%);
+  }
+
+  .hand {
+    width: 33.333%;
+    -webkit-transform: none !important;
+    position: relative;
+    top: 0; left: 0;
+    float: left;
+    margin: 0;
+    height: 100px;
+    font: normal 70px/100px 'Helvetica Neue', sans-serif;
+    text-align: center;
+    color: darkslategrey;
+    background: transparent;
+    text-shadow: 0 -1px #234;
+
+    &:before {
+      content: attr(data-time);
+      border: 0;
+      margin: 0;
+      position: static;
+    }
+  }
+
+  .hour-hand, .minute-hand {
+    &:after {
+      content: ':';
+      font: normal 50px/100px 'Helvetica Neue', sans-serif;
+      position: absolute;
+      top: -5px;
+      right: -6.5px;
+    }
+  }
+}
+
+
+
+
